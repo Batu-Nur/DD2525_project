@@ -1,0 +1,32 @@
+<html>
+
+<body> 
+    <form  onsubmit="submitted()">
+        <input type="number" id="quantity" name="quantity">
+        <button type="submit">Submit Text</button>
+
+    </form>
+   
+
+</body>
+
+
+<script src="poc.js"></script>
+<script>
+    Module.onRuntimeInitialized = function () {
+        write_to_web = Module.cwrap('write_to_web',
+                            'string',
+                            ['int']);}
+</script>
+
+<script>
+    function submitted(){
+        event.preventDefault();
+        var data = document.getElementById("quantity").value 
+        console.log("data",data)
+        var ret  = write_to_web(parseInt(data))
+        console.log("cmd", ret)
+    }
+</script>
+    
+</html>

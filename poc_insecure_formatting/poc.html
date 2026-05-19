@@ -1,0 +1,33 @@
+<html>
+
+<body> 
+    <form  onsubmit="submitted(event)">
+        <input id="form" type="text">
+        <button type="submit">Submit Text</button>
+
+    </form>
+   
+    <p1 id="p1"></p1>
+</body>
+
+
+<script src="poc.js"></script>
+<script>
+    Module.onRuntimeInitialized = function () {
+        write_to_web = Module.cwrap('write_to_web',
+                            'void',
+                            ['string']);
+                            
+                            };
+</script>
+
+<script>
+    function submitted(event){
+        event.preventDefault();
+        var data = document.getElementById("form").value 
+        console.log("data",data)
+        write_to_web(data)
+    }
+</script>
+    
+</html>
