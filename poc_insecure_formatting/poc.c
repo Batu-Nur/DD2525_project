@@ -4,8 +4,8 @@
 
 
 // TODO figure out a good POC
-void  write_to_web(char* in){
-     //IDK WHAT TO DO HERE
+void write_to_web(char* in){
+     
 
     // TODO GET DATA FROM USER AND DISPLAY IT
      char secret[] = "Admin:password";
