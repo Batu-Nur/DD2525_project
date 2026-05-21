@@ -18,7 +18,17 @@ EMCC_FLAGS = \
     -s MODULARIZE=1 \
     -s EXPORTED_FUNCTIONS=_free,_get_user_secret,_open_database,_close_db,_sqlite3_open,_sqlite3_errmsg,_malloc,_sqlite3_exec \
     -s EXPORTED_RUNTIME_METHODS=cwrap,ccall,getValue,UTF8ToString,stringToNewUTF8 \
-    -I$(SQLITE_DIR)
+    -I$(SQLITE_DIR) \
+	-g \
+	-fno-inline \
+	-sERROR_ON_UNDEFINED_SYMBOLS=0 \
+	-sSTANDALONE_WASM=1 \
+	-Wl,--no-entry \
+	-mno-reference-types \
+	-mno-bulk-memory \
+	-mno-sign-ext \
+	-mno-nontrapping-fptoint \
+
 
 all: $(SQLITE_DIR) $(TARGET_JS) $(TARGET_WASM)
 
