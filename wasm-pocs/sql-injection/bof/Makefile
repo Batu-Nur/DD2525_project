@@ -2,14 +2,16 @@ EMCC ?= emcc
 
 CACHE_DIR = ../cache
 
-SQLITE_VERSION = 3490200
-SQLITE_YEAR = 2025
+SQLITE_VERSION = 3450000
+SQLITE_YEAR = 2024
 SQLITE_ZIP_FILENAME = sqlite-amalgamation-$(SQLITE_VERSION).zip
 SQLITE_ZIP = $(CACHE_DIR)/$(SQLITE_ZIP_FILENAME)
 SQLITE_URL = https://sqlite.org/$(SQLITE_YEAR)/$(SQLITE_ZIP_FILENAME)
 SQLITE_DIR = $(CACHE_DIR)/sqlite-amalgamation-$(SQLITE_VERSION)
+SQLITE_C = $(SQLITE_DIR)/sqlite3.c
+SQLITE_H = $(SQLITE_DIR)/sqlite3.h
 
-SOURCES = wasm.c 
+SOURCES = wasm.c $(SQLITE_C)
 
 TARGET_JS = wasm.js
 TARGET_WASM = wasm.wasm
@@ -33,13 +35,25 @@ EMCC_FLAGS = \
 all: $(TARGET_JS) $(TARGET_WASM)
 
 
-$(TARGET_JS): $(SOURCES)
+$(TARGET_JS): $(SOURCES) $(SQLITE_H)
 	@echo "Compiling $(TARGET_JS)..."
-	$(EMCC) $(SOURCES) $(EMCC_FLAGS) -o $(TARGET_JS)
+	$(EMCC) $(SOURCES) $(EMCC_FLAGS) -o $(TARGET_JS) -I $(SQLITE_DIR)
 
-.PHONY: all clean download_sqlite unzip_sqlite
+$(SQLITE_ZIP):
+	@echo "Downloading SQLite"
+	@mkdir -p $(CACHE_DIR)
+	curl -L -o $(SQLITE_ZIP) $(SQLITE_URL)
+
+$(SQLITE_C): $(SQLITE_ZIP)
+	@echo "Extracting SQLite"
+	cd $(CACHE_DIR) && unzip -q $(SQLITE_ZIP_FILENAME)
+
+.PHONY: all clean clean-cache
 
 clean:
 	@echo "Cleaning up..."
 	rm -f $(TARGET_JS) $(TARGET_WASM) *.o *.wasm.map *.js.mem users.db
+
+clean-cache:
+	@echo "Cleaning cache..."
 	rm -rf $(CACHE_DIR)
