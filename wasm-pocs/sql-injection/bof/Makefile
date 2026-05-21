@@ -1,6 +1,6 @@
 EMCC ?= emcc
 
-CACHE_DIR = cache
+CACHE_DIR = ../cache
 
 SQLITE_VERSION = 3490200
 SQLITE_YEAR = 2025
@@ -9,7 +9,7 @@ SQLITE_ZIP = $(CACHE_DIR)/$(SQLITE_ZIP_FILENAME)
 SQLITE_URL = https://sqlite.org/$(SQLITE_YEAR)/$(SQLITE_ZIP_FILENAME)
 SQLITE_DIR = $(CACHE_DIR)/sqlite-amalgamation-$(SQLITE_VERSION)
 
-SOURCES = wasm.c $(SQLITE_DIR)/sqlite3.c
+SOURCES = wasm.c 
 
 TARGET_JS = wasm.js
 TARGET_WASM = wasm.wasm
@@ -18,20 +18,20 @@ EMCC_FLAGS = \
     -s MODULARIZE=1 \
     -s EXPORTED_FUNCTIONS=_free,_get_user_secret,_open_database,_initialize_db,_close_db,_sqlite3_open,_sqlite3_errmsg,_malloc \
     -s EXPORTED_RUNTIME_METHODS=stringToNewUTF8,UTF8ToString,stackAlloc,getValue,cwrap \
-    -I$(SQLITE_DIR)
+	-g \
+	-fno-inline \
+	-sERROR_ON_UNDEFINED_SYMBOLS=0 \
+	-sSTANDALONE_WASM=1 \
+	-Wl,--no-entry \
+	-mno-reference-types \
+	-mno-bulk-memory \
+	-mno-sign-ext \
+	-mno-nontrapping-fptoint \
+	
 
-all: $(SQLITE_DIR) $(TARGET_JS) $(TARGET_WASM)
+   
+all: $(TARGET_JS) $(TARGET_WASM)
 
-$(CACHE_DIR):
-	@mkdir -p $(CACHE_DIR)
-
-$(SQLITE_ZIP): $(CACHE_DIR)
-	@echo "Downloading SQLite amalgamation to $(CACHE_DIR)..."
-	curl -o $@ $(SQLITE_URL) || wget -O $@ $(SQLITE_URL)
-
-$(SQLITE_DIR): $(SQLITE_ZIP)
-	@echo "Unzipping SQLite amalgamation to $(CACHE_DIR)..."
-	unzip -q -o $< -d $(CACHE_DIR)
 
 $(TARGET_JS): $(SOURCES)
 	@echo "Compiling $(TARGET_JS)..."

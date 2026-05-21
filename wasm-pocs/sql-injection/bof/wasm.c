@@ -1,10 +1,11 @@
 #include <emscripten.h>
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-EMSCRIPTEN_KEEPALIVE
-int execute_query(sqlite3 *db, char *query) {
+EMSCRIPTEN_KEEPALIVE int execute_query(sqlite3 *db, char *query)
+{
   char *err_msg = 0;
   int rc = sqlite3_exec(db, query, 0, 0, &err_msg);
 
