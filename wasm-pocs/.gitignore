@@ -1,0 +1,6 @@
+.venv/
+cache/
+.cache/
+wasm.js
+wasm.wasm
+compile_commands.json
