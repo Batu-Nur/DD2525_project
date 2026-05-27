@@ -31,14 +31,26 @@ def evaluate_wasmati(wasmati_path, wasm_file):
         print("No results to display.")
     return results
 
-def evaluate_all_wasm_files(wasmati_path, directory):
+def evaluate_all_wasm_files(wasmati_path, directory, recursive=True):
     yielded_results = {}
-    for filename in os.listdir(directory):
-        if filename.endswith(".wasm"):
-            print(f"Evaluating {filename}...")
-            results = evaluate_wasmati(wasmati_path, os.path.join(directory, filename))
-            yielded_results[filename] = results
+
+    for root, _, filenames in os.walk(directory, topdown = recursive):
+        for filename in filenames:
+            if not filename.endswith(".wasm"):
+                continue
+
+            file_path = os.path.join(root, filename)
+            print(f"Evaluating {file_path}...")
+            results = evaluate_wasmati(wasmati_path, file_path)
+            yielded_results[file_path] = results
+
     return yielded_results
+
+def count_findings(results):
+    counts = {}
+    for query, findings in results.items():
+        counts[query] = len(findings)
+    return counts
 
 if __name__ == "__main__":
     results = evaluate_all_wasm_files("/Users/jonasjostan/Documents/language_security/project/wasmati/bin/wasmati", "/Users/jonasjostan/Documents/language_security/project/wasmati/tests/c")
