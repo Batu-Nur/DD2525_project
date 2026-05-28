@@ -109,8 +109,8 @@ def bounded(executor, func, items, max_pending):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate wasm files and append results to JSONL")
-    parser.add_argument("--wasmati", default="/Users/jonasjostan/Documents/language_security/project/wasmati/bin/wasmati")
-    parser.add_argument("--directory", default="/Users/jonasjostan/Documents/language_security/project/wasmati/tests/c")
+    parser.add_argument("--wasmati", default="wasmati/bin/wasmati")
+    parser.add_argument("--directory", default="wasmati/tests/c")
     parser.add_argument("--recursive", action="store_true", help="Recursively scan for .wasm files")
     parser.add_argument("--limit", type=int, default=0, help="Analyze only first N files (0 = all)")
     parser.add_argument("--sample", action="store_true", help="Randomly sample files before applying --limit")
