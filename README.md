@@ -13,3 +13,32 @@ Then you can run it on browser by opening the html file after hosting the files 
 ```
 python3 -m http.server 
 ```
+
+## Analysis with Wasmati
+- First, clone and compile wasmati. Follow the instructions on the wasmati repository: [Repository](https://github.com/halo34/wasmati)
+- Then, run the following command to analyze the generated .wasm file:
+```
+python3 DD2525_project/evaluation/evauluate.py \
+  --directory "path/to/wasm/files" \
+  --recursive \
+  --max-size-kb 25 \
+  --workers 3 \
+  --output-jsonl my_results_max25kb.jsonl
+
+```
+To analyse the PoCs, you can run the following command:
+```
+python3 DD2525_project/evaluation/evauluate.py \
+  --directory "path/to/wasm-pocs" \
+  --recursive \
+  --max-size-kb 25 \
+  --workers 3 \
+  --output-jsonl poc.jsonl
+  
+- To analyze the results, you can open the `analyse.ipynb` notebook. Please be aware to install first the required dependencies, e.g., using pip:
+```
+pip install pandas matplotlib seaborn
+```
+
+### Pregenerated results
+The results of the analysis of the PoCs are available in `poc.jsonl`. The results of the analysis of WasmBench is available in `my_results_max25kb.jsonl` without language extensions and with language in `my_results_max25kb_with_language.jsonl`. 
