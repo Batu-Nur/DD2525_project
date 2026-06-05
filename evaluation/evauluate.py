@@ -112,14 +112,13 @@ if __name__ == "__main__":
     parser.add_argument("--wasmati", default="wasmati/bin/wasmati")
     parser.add_argument("--directory", default="wasmati/tests/c")
     parser.add_argument("--recursive", action="store_true", help="Recursively scan for .wasm files")
-    parser.add_argument("--limit", type=int, default=0, help="Analyze only first N files (0 = all)")
+    parser.add_argument("--limit", type=int, default=0, help="Analyze only first N files ")
     parser.add_argument("--sample", action="store_true", help="Randomly sample files before applying --limit")
     parser.add_argument("--seed", type=int, default=42, help="Seed for --sample")
-    parser.add_argument("--workers", type=int, default=1, help="Number of parallel workers (1 = sequential)")
+    parser.add_argument("--workers", type=int, default=1, help="Number of parallel workers")
     parser.add_argument("--output-jsonl", default="results.jsonl", help="Path to output JSONL file")
     parser.add_argument("--overwrite-existing", action="store_true", help="Recompute and append even if file already exists in JSONL")
-    parser.add_argument("--max-size-kb", type=int, default=400, help="Skip files larger than this size in KB (0 = disable)")
-    parser.add_argument("--batch", type=int, default=-1, help="selects the batch size for the evaluation. If -1, no batching is used and each file is evaluated separately.")
+    parser.add_argument("--max-size-kb", type=int, default=25, help="Skip files larger than this size in KB (0 = disable)")
     args = parser.parse_args()
 
     all_files = collect_wasm_files(args.directory, recursive=args.recursive)
@@ -158,4 +157,4 @@ if __name__ == "__main__":
             for file_path, res in bounded(executor, lambda p: evaluate_one_file(args.wasmati, p), todo_files, max_pending=args.workers * 2):
                 append_result_jsonl(args.output_jsonl, file_path, res)
                 del res
-    print(f"Saved results to {os.path.abspath(args.output_jsonl)}")
+    print(f"Saved the jsonl file to {os.path.abspath(args.output_jsonl)}")
