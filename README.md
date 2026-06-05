@@ -18,7 +18,8 @@ python3 -m http.server
 - First, clone and compile wasmati. Follow the instructions on the wasmati repository: [Repository](https://github.com/halo34/wasmati)
 - Then, run the following command to analyze the generated .wasm file:
 ```
-python3 DD2525_project/evaluation/evauluate.py \
+python3 evaluation/evauluate.py \
+  --wasmati "path/to/wasmati/bin/wasmati" \
   --directory "path/to/wasm/files" \
   --recursive \
   --max-size-kb 25 \
@@ -31,7 +32,7 @@ To analyse the PoCs, you can run the following command:
 python3 DD2525_project/evaluation/evauluate.py \
   --directory "path/to/wasm-pocs" \
   --recursive \
-  --max-size-kb 25 \
+  --max-size-kb 400 \
   --workers 3 \
   --output-jsonl poc.jsonl
   
